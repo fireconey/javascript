@@ -2,11 +2,11 @@
 此函数为调试的时候使用，否则使用alert没有
 点击关闭太麻烦
 ****/
-function run(x)
-{
-var ko=document.getElementById("div")
-    ko.innerText=x
-}
+// function run(x)
+// {
+// var ko=document.getElementById("div")
+//     ko.innerText=x
+// }
 
 
 
@@ -23,8 +23,10 @@ return this 是返回插件这个对象，这样可以继续调用
 var $=function(x){
   var init=new chajian()
 //使用多级选择器获取对象的并且会放在this.element中
-  if(x!=null)
-     init.query(x)
+  if(x!=null && x.indexOf(".js")==-1)
+     {init.query(x)}
+  if(x.indexOf(".js")!=-1)
+    init.include(x)
   
   return init
 
@@ -54,8 +56,8 @@ this.getClassName=function(x){
        if(classname[i].className==x)
         {
      
-	          this.element.push(classname[i])
-                  this.temp=classname[i]	
+            this.element.push(classname[i])
+                  this.temp=classname[i]  
   
          }
          
@@ -85,7 +87,7 @@ this.getId=function(x)
 /**********************通过元素得到对象************************/
 this.getElement=function(x)
 { 
-	var el=document.getElementsByTagName(x)
+  var el=document.getElementsByTagName(x)
         if(el.length!=0){
         this.element=el
         this.temp=el
@@ -94,7 +96,7 @@ this.getElement=function(x)
         {
           alert("获取Element得到了null")
         }
-  	return this
+    return this
 }
 
 
@@ -109,13 +111,13 @@ this.findchild=function(y){
       var flag=1
       switch(start){
                case ".":y=y.slice(1);
-			flag="className";
+      flag="className";
                         break;
                case "#":y=y.slice(1);
- 			flag="id";
-			break;
-	       default: y=y;
-			flag="tagName";
+      flag="id";
+      break;
+         default: y=y;
+      flag="tagName";
                         break
                
                     }
@@ -136,20 +138,20 @@ this.findchild=function(y){
                  }
 
              for(var j=0;j<ele.length;j++)
-	             {   var ch=ele[j][flag].toLowerCase()
+               {   var ch=ele[j][flag].toLowerCase()
                  if(ch==y)
-			           {
+                 {
 
                       this.temp.push(ele[j])
                       
-			           }
+                 }
                  
                  //某级还有子元素，但是下一个参数和子元素不一样导致temp空
                  //有子元素且temp为空，可以确定上面条件。
                   if(this.temp.length==0 && j==ele.length-1)
                   {
                     alert("没有此对象:"+ale+"\n或者Html中嵌套错误"+"\n在findchild函数中报错")
-   		               return ;
+                     return ;
                    }
                  
               }
@@ -198,7 +200,13 @@ for(var i=1;i<q.length;i++)
 }
 
 
-
+this.include=function(x)
+{
+      var body=document.getElementsByTagName("body")[0];
+      var content=document.createElement("script");
+          content.setAttribute("src",x)
+          body.prepend(content)
+}
 
 
 
@@ -284,17 +292,18 @@ this.extend=function(x){
 
 
 /**************************测试*******************************/
-function ji()
-{
-  run("此显示是在插件ji中")
-}
+// function ji()
+// {
+//   run("此显示是在插件ji中")
+// }
 
-//插件扩展
-$().extend(ji)
-$().ji()
+// //插件扩展
+// $().extend(ji)
+// $().ji()
 
 
-$(".div1").css("color:red,background:yellow")
+// $(".div1").css("color:red,background:yellow")
+
 
 
 
