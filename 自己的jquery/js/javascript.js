@@ -1,34 +1,35 @@
-/***使用此函数可以在html中查看打印的值。
+﻿/***使用此函数可以在html中查看打印的值。
 此函数为调试的时候使用，否则使用alert没有
 点击关闭太麻烦
-****/
+// ****/
 // function run(x)
 // {
-// var ko=document.getElementById("div")
-//     ko.innerText=x
+// 	var ko=document.getElementById("div")
+// 	ko.innerText=x
 // }
 
 
 
 /*
-使用$包装可以使外表与jquery非常像
-核心类是chajian()，
-获取的所有对象都放在this.element中
-return this 是返回插件这个对象，这样可以继续调用
-其中的方法，起到连缀的效果（如：a.b.c）
-
+使用$包装可以使样子与jquery非常像。
+核心类是chajian()，获取的所有对象
+都放在this.element中，插件要调用
+对象可以直接在插件中使用this.element[XX]。
+return this 是返回插件这个对象，这
+样可以使用连号继续调用其中的方法，
+起到连缀的效果（如：a.b.c）。
 */
 
 var $ = function(x) 
 {
-	var init = new chajian()
+	var _init = new chajian()
 
 		//使用多级选择器获取对象的并且会放在this.element中
 		if (x != null ) 
 		{
-			init.query(x)
+			_init.query(x)
 		}
-		return init
+		return _init
 	}
 
 
@@ -215,11 +216,12 @@ function chajian()
 	  append是在选定元素的子元素后面追加
 	  innerHTML导入的js代码不能执行要使用
       createElement
+      使用：$().include("XXX.js")
       */
       this.include = function(x) 
       {
       	var body = document.getElementsByTagName("html")[0];
-      	var content = document.createElement("script");
+      	var content = document.createElement("srcipt");
 
       	content.setAttribute("src", x)
       	body.append(content)
@@ -233,9 +235,9 @@ function chajian()
 	 $("div").color("background:color, color:black")
 	 */
 	 this.css = function(y) 
-	 {
-	 	var x = y.replace(" ", "")
-	 	var y = x.split(",")
+	 {     
+	 	var x=y.replace(" ","")
+	 	var y = y.split(",")
 
 	 	if (x == null) 
 	 	{
@@ -260,6 +262,10 @@ function chajian()
 
 
 	/*****************得到元素*****************/
+	/*
+	使用：$("XX"||空值).getEl(数值) 
+	得到元素后就可以使用js原生的方法了。
+	*/
 	this.getEl=function()
 	{
 		var ar=arguments;
@@ -289,27 +295,164 @@ function chajian()
 	}
 
 
-
-	/*****************字符分割工具*****************/
-	this.tool = function(x)
+	/*****************3D效果*****************/
+	/*
+	  j:加载的图片数量
+	  src:图片的位置
+	  id：你自己定义的容器id
+	  shengdu:表示精深
+	  使用如：$().D3(2,"file/img","_div",100)
+	 */
+	this.D3=function(j,src,id,shengdu)
 	{
-		var h = x.toLowerCase().split(" ");
-		var tol = [];
+	/*
+	先添加包装元素
+	*/	
+    var loc=document.getElementById(id)
 
-		for (var i = 0; i < h.length; i++)
-		{
-			if (h[i] != "") 
-			{
-				tol.push(h[i])
-			}
-		}
-		return tol
+	var insertwrap="<div id='_wrap'> </div>"
+	loc.innerHTML=insertwrap
+
+	var wrap=document.getElementById("_wrap")
+	var insertstack=[]
+	var insertimg=""
+
+	//设置景深
+	loc.style.perspective=shengdu+"px"
+	for(var k=1;k<j+1;k++ )
+	{   
+		insertstack.push("<img src='"+src+"/"+k+".jpg'>")
+
+	}
+	/*
+	如果直接在for中使用length
+	由于每次弹栈length都会改变
+	经验就是：不在for()中计算
+	*/
+	var len=insertstack.length
+	for(var i=0;i<len;i++)
+	{  
+		insertimg+=insertstack.shift()
+	}
+
+	wrap.innerHTML=insertimg
+
+
+	/************* 
+	以下是3D核心代码*
+	****************/
+	var oimg = document.getElementsByTagName("img");
+	var owrap = document.getElementById("_wrap")
+	var deg = 360 / (oimg.length);
+	var len = oimg.length;
+	var timer;
+
+	for (var i=0; i < len; i++)
+	{
+
+		oimg[i].style.transform = "rotateY(" + i * deg + "deg)  translateZ(350px)";
+		oimg[i].style.zindex = -i*2;
+		oimg[i].style.WebkitTransition = "all 2s";
+		oimg[i].style.transition = "all "+(i+1)+"s";
+
 	}
 
 
 
+	var nowx = 0,
+	nowy = 0,
+	minusx = 0,
+	minusy = 0,
+	rotx = 0,
+	roty = 0;
+	document.onmousedown = function(e)
+	{
+		e.preventDefault();
 
-	/******************获取函数名称***************/
+		var e = e || window.event;
+		lastx = e.clientX, lasty = e.clientY,
+
+		this.onmousemove = function(e) {
+
+			var e = e || window.event;
+			nowx = e.clientX;
+			nowy = e.clientY;
+
+			minusx = nowx - lastx;
+			minusy = nowy - lasty;
+
+			rotx -= minusy;
+			roty += minusx;
+
+			if (rotx < -30) {
+				rotx = -30
+			}
+			if (rotx > 30) {
+				rotx = 30
+			}
+
+			// transform会清空所有的设置。所以
+			// 一起设置，否则最后一次有效。
+			owrap.style.transform = "rotateX(" + rotx + "deg)  rotateY(" + roty + "deg)";
+
+			lastx = nowx;
+			lasty = nowy;
+			return this
+		}
+
+		this.onmouseup = function(e)
+		{
+			/*清除事件*/
+			this.onmousemove=null
+
+			/*惯性*/
+			timer = setInterval(function() 
+			{
+				minusx *= 0.98;
+				minusy *= 0.98;
+				rotx -= minusy * 0.1
+				roty += minusx * 0.1
+
+				if (rotx < -30) 
+				{
+					rotx = -30
+				}
+				if (rotx > 30) 
+				{
+					rotx = 30
+				}
+				console.log(Math.abs(minusx))
+				owrap.style.transform = "rotateX(" + rotx + "deg) rotateY(" + roty + "deg)";
+				if (Math.abs(minusx) < 0.1 || Math.abs(minusy) < 0.1) 
+				{
+					clearInterval(timer)
+				}
+			}, 1000 / 60)
+		}
+	}
+}
+
+
+/*****************字符分割工具*****************/
+this.tool = function(x)
+{
+	var h = x.toLowerCase().split(" ");
+	var tol = [];
+
+	for (var i = 0; i < h.length; i++)
+	{
+		if (h[i] != "") 
+		{
+			tol.push(h[i])
+		}
+	}
+	return tol
+}
+
+
+
+
+/******************获取函数名称***************/
 	/*使用了正则表达式,
 	  "/要匹配的样式/ig" i表示忽略大小写，g是global
 	  表示全局
@@ -330,6 +473,10 @@ function chajian()
 
 
 	/********************插件扩展******************/
+	/*
+	使用方法是：$().extend(XXX)
+	XXX是函数的名称，不要括号。 
+	*/
 	this.extend = function(x) 
 	{
 		var name = this.getFunc(x) //获取函数的名称
@@ -360,3 +507,9 @@ function chajian()
 
 
 // $(".div1").css("color:red,background:yellow")
+
+
+
+
+
+
