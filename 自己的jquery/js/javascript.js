@@ -301,9 +301,12 @@ function chajian()
 	  src:图片的位置
 	  id：你自己定义的容器id
 	  shengdu:表示精深
-	  使用如：$().D3(2,"file/img","_div",100)
+	  z:图片到中心的距离
+	  #_wrap img:设置图片颜色
+	  #_wrap:设置包裹的div的样式
+	  使用如：$().D3(2,"file/img","_div",100,100)
 	 */
-	this.D3=function(j,src,id,shengdu)
+	this.D3=function(j,src,id,shengdu,z)
 	{
 	/*
 	先添加包装元素
@@ -314,6 +317,10 @@ function chajian()
 	loc.innerHTML=insertwrap
 
 	var wrap=document.getElementById("_wrap")
+	    wrap.style.transformStyle="preserve-3d"
+	    wrap.style.transform="rotateX(-10deg)"
+	    wrap.style.position="relative"
+
 	var insertstack=[]
 	var insertimg=""
 
@@ -348,9 +355,10 @@ function chajian()
 	var timer;
 
 	for (var i=0; i < len; i++)
-	{
-
-		oimg[i].style.transform = "rotateY(" + i * deg + "deg)  translateZ(350px)";
+	{   
+        oimg[i].style.position="absolute"
+        oimg[i].style.webkitBoxReflect="below 5px -webkit-linear-gradient(top,rgba(0,0,0,0) 40%,rgba(0,0,0,0.5) 100%)" 
+		oimg[i].style.transform = "rotateY(" + i * deg + "deg)  translateZ("+z+"px)";
 		oimg[i].style.zindex = -i*2;
 		oimg[i].style.WebkitTransition = "all 2s";
 		oimg[i].style.transition = "all "+(i+1)+"s";
@@ -421,7 +429,7 @@ function chajian()
 				{
 					rotx = 30
 				}
-				console.log(Math.abs(minusx))
+				
 				owrap.style.transform = "rotateX(" + rotx + "deg) rotateY(" + roty + "deg)";
 				if (Math.abs(minusx) < 0.1 || Math.abs(minusy) < 0.1) 
 				{
