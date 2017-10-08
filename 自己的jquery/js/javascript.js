@@ -259,7 +259,7 @@ function chajian()
 	}
 
 
-	/*****************得到标签*****************/
+	/*****************得到元素*****************/
 	this.getEl=function()
 	{
 		var ar=arguments;
@@ -267,14 +267,14 @@ function chajian()
 
 		if(this.element.length==0)
 		{
-			alert("没有标签");
+			alert("你还没有选定元素");
 			return;
 		}
 		if(len!=0)
 		{  
 			if(this.element.length!=arguments[0]+1)
 			{
-				alert("标签集中没有第："+arguments[0]+"\n个标签")
+				alert("元素集中没有第："+arguments[0]+"\n个元素")
 				return  this;
 			}
 			else
