@@ -1,29 +1,17 @@
-﻿/***使用此函数可以在html中查看打印的值。
-此函数为调试的时候使用，否则使用alert没有
-点击关闭太麻烦
-// ****/
-// function run(x)
-// {
-// 	var ko=document.getElementById("div")
-// 	ko.innerText=x
-// }
+﻿
+	/*
+	使用$包装可以使样子与jquery非常像。
+	核心类是chajian()，获取的所有对象
+	都放在this.element中，插件要调用
+	对象可以直接在插件中使用this.element[XX]。
+	return this 是返回插件这个对象，这
+	样可以使用连号继续调用其中的方法，
+	起到连缀的效果（如：a.b.c）。
+	*/
 
-
-
-/*
-使用$包装可以使样子与jquery非常像。
-核心类是chajian()，获取的所有对象
-都放在this.element中，插件要调用
-对象可以直接在插件中使用this.element[XX]。
-return this 是返回插件这个对象，这
-样可以使用连号继续调用其中的方法，
-起到连缀的效果（如：a.b.c）。
-*/
-
-var $ = function(x) 
-{
-	var _init = new chajian()
-
+	var $ = function(x) 
+	{  var _init = new chajian()
+		
 		//使用多级选择器获取对象的并且会放在this.element中
 		if (x != null ) 
 		{
@@ -33,7 +21,14 @@ var $ = function(x)
 	}
 
 
-	/***定义的一个类**/
+
+
+
+
+
+
+
+	/*****************定义的一个类*****************/
 /*
 把自己的函数插入可以调用
 $().extend(fn) fn不要括号
@@ -44,6 +39,9 @@ function chajian()
 	//随便弄几个变量以便放值
 	this.element = []
 	this.temp = 1
+
+
+
 
 
 	/************************通过类名得到对象*********************/
@@ -64,17 +62,21 @@ function chajian()
 
 			if (i == classname.length - 1 && this.element.length == 0) 
 			{
-				alert("获取classname得到了null")
+				alert("查询类的时候发生错误，是否$()中输入有错?")
 			}
 		}
 		return this
 	}
 
+
+
+
+
 	/*********************通过id得到对象*****************************/
 	this.getId = function(x) 
-	{
-		var id = document.getElementById(x)
+	{   
 
+		var id = document.getElementById(x)
 		if (id != null)
 		{
 			this.element[0] = id
@@ -82,10 +84,14 @@ function chajian()
 		}
 		if (id == null) 
 		{
-			alert("获取id得到了null")
+			alert("查询id时发生错误，是否$()中输入有错?")
 		}
 		return this
 	}
+
+
+
+
 
 	/**********************通过元素得到对象************************/
 	this.getElement = function(x) 
@@ -98,10 +104,14 @@ function chajian()
 		}
 		if (el.length == 0) 
 		{
-			alert("获取Element得到了null")
+			alert("查询元素时发生错误，是否$()中输入有错?")
 		}
 		return this
 	}
+
+
+
+
 
 
 	/*******通过调用上面其中某个方法后得到一个对象，根据此对象得到子对象***********/
@@ -169,6 +179,10 @@ function chajian()
 	}
 
 
+
+
+
+
 	/*****************多级选择*****************/
 	this.child = 0 //数据由query修改传给findchild，用于计数有多少个参数传入
 	this.query = function(x) 
@@ -211,6 +225,10 @@ function chajian()
 		}
 	}
 
+
+
+
+
 	/*****************导入js文件*****************/
 	/*
 	  append是在选定元素的子元素后面追加
@@ -226,6 +244,8 @@ function chajian()
       	content.setAttribute("src", x)
       	body.append(content)
       }
+
+
 
 
 
@@ -259,6 +279,10 @@ function chajian()
 		}
 		return this
 	}
+
+
+
+
 
 
 	/*****************得到元素*****************/
@@ -295,178 +319,357 @@ function chajian()
 	}
 
 
+
+
+
 	/*****************3D效果*****************/
 	/*
-	  j:加载的图片数量
-	  src:图片的位置
-	  id：你自己定义的容器id
-	  shengdu:表示精深
-	  z:图片到中心的距离
-	  #_wrap img:设置图片颜色
-	  #_wrap:设置包裹的div的样式
-	  使用如：$().D3(2,"file/img","_div",100,100)
-	 */
+	j:加载的图片数量
+	src:图片的位置
+	id：你自己定义的容器id
+	shengdu:表示精深
+	z:图片到中心的距离
+	#_wrap img:设置图片颜色
+	#_wrap:设置包裹的div的样式
+	使用如：$().D3(2,"file/img","_div",100,100)
+	*/
 	this.D3=function(j,src,id,shengdu,z)
 	{
-	/*
-	先添加包装元素
-	*/	
-    var loc=document.getElementById(id)
+		/*
+		先添加包装元素
+		*/	
+		var loc=document.getElementById(id)
 
-	var insertwrap="<div id='_wrap'> </div>"
-	loc.innerHTML=insertwrap
+		var insertwrap="<div id='_wrap'> </div>"
+		loc.innerHTML=insertwrap
 
-	var wrap=document.getElementById("_wrap")
-	    wrap.style.transformStyle="preserve-3d"
-	    wrap.style.transform="rotateX(-10deg)"
-	    wrap.style.position="relative"
+		var wrap=document.getElementById("_wrap")
+		wrap.style.transformStyle="preserve-3d"
+		wrap.style.transform="rotateX(-10deg)"
+		wrap.style.position="relative"
 
-	var insertstack=[]
-	var insertimg=""
+		var insertstack=[]
+		var insertimg=""
 
-	//设置景深
-	loc.style.perspective=shengdu+"px"
-	for(var k=1;k<j+1;k++ )
-	{   
-		insertstack.push("<img src='"+src+"/"+k+".jpg'>")
+		//设置景深
+		loc.style.perspective=shengdu+"px"
+		for(var k=1;k<j+1;k++ )
+		{   
+			insertstack.push("<img src='"+src+"/"+k+".jpg'>")
 
-	}
-	/*
-	如果直接在for中使用length
-	由于每次弹栈length都会改变
-	经验就是：不在for()中计算
-	*/
-	var len=insertstack.length
-	for(var i=0;i<len;i++)
-	{  
-		insertimg+=insertstack.shift()
-	}
+		}
+		/*
+		如果直接在for中使用length
+		由于每次弹栈length都会改变
+		经验就是：不在for()中计算
+		*/
+		var len=insertstack.length
+		for(var i=0;i<len;i++)
+		{  
+			insertimg+=insertstack.shift()
+		}
 
-	wrap.innerHTML=insertimg
-
-
-	/************* 
-	以下是3D核心代码*
-	****************/
-	var oimg = document.getElementsByTagName("img");
-	var owrap = document.getElementById("_wrap")
-	var deg = 360 / (oimg.length);
-	var len = oimg.length;
-	var timer;
-
-	for (var i=0; i < len; i++)
-	{   
-        oimg[i].style.position="absolute"
-        oimg[i].style.webkitBoxReflect="below 5px -webkit-linear-gradient(top,rgba(0,0,0,0) 40%,rgba(0,0,0,0.5) 100%)" 
-		oimg[i].style.transform = "rotateY(" + i * deg + "deg)  translateZ("+z+"px)";
-		oimg[i].style.zindex = -i*2;
-		oimg[i].style.WebkitTransition = "all 2s";
-		oimg[i].style.transition = "all "+(i+1)+"s";
-
-	}
+		wrap.innerHTML=insertimg
 
 
+		/************* 
+		以下是3D核心代码*
+		****************/
+		var oimg = document.getElementsByTagName("img");
+		var owrap = document.getElementById("_wrap")
+		var deg = 360 / (oimg.length);
+		var len = oimg.length;
+		var timer;
 
-	var nowx = 0,
-	nowy = 0,
-	minusx = 0,
-	minusy = 0,
-	rotx = 0,
-	roty = 0;
-	document.onmousedown = function(e)
-	{
-		e.preventDefault();
+		for (var i=0; i < len; i++)
+		{   
+			oimg[i].style.position="absolute"
+			oimg[i].style.webkitBoxReflect="below 5px -webkit-linear-gradient(top,rgba(0,0,0,0) 40%,rgba(0,0,0,0.5) 100%)" 
+			oimg[i].style.transform = "rotateY(" + i * deg + "deg)  translateZ("+z+"px)";
+			oimg[i].style.zindex = -i*2;
+			oimg[i].style.WebkitTransition = "all 2s";
+			oimg[i].style.transition = "all "+(i+1)+"s";
 
-		var e = e || window.event;
-		lastx = e.clientX, lasty = e.clientY,
+		}
 
-		this.onmousemove = function(e) {
+
+
+		var nowx = 0,
+		nowy = 0,
+		minusx = 0,
+		minusy = 0,
+		rotx = 0,
+		roty = 0;
+		document.onmousedown = function(e)
+		{
+			e.preventDefault();
 
 			var e = e || window.event;
-			nowx = e.clientX;
-			nowy = e.clientY;
+			lastx = e.clientX, lasty = e.clientY,
 
-			minusx = nowx - lastx;
-			minusy = nowy - lasty;
+			this.onmousemove = function(e) {
 
-			rotx -= minusy;
-			roty += minusx;
+				var e = e || window.event;
+				nowx = e.clientX;
+				nowy = e.clientY;
 
-			if (rotx < -30) {
-				rotx = -30
-			}
-			if (rotx > 30) {
-				rotx = 30
-			}
+				minusx = nowx - lastx;
+				minusy = nowy - lasty;
 
-			// transform会清空所有的设置。所以
-			// 一起设置，否则最后一次有效。
-			owrap.style.transform = "rotateX(" + rotx + "deg)  rotateY(" + roty + "deg)";
+				rotx -= minusy;
+				roty += minusx;
 
-			lastx = nowx;
-			lasty = nowy;
-			return this
-		}
-
-		this.onmouseup = function(e)
-		{
-			/*清除事件*/
-			this.onmousemove=null
-
-			/*惯性*/
-			timer = setInterval(function() 
-			{
-				minusx *= 0.98;
-				minusy *= 0.98;
-				rotx -= minusy * 0.1
-				roty += minusx * 0.1
-
-				if (rotx < -30) 
-				{
+				if (rotx < -30) {
 					rotx = -30
 				}
-				if (rotx > 30) 
-				{
+				if (rotx > 30) {
 					rotx = 30
 				}
-				
-				owrap.style.transform = "rotateX(" + rotx + "deg) rotateY(" + roty + "deg)";
-				if (Math.abs(minusx) < 0.1 || Math.abs(minusy) < 0.1) 
+
+				// transform会清空所有的设置。所以
+				// 一起设置，否则最后一次有效。
+				owrap.style.transform = "rotateX(" + rotx + "deg)  rotateY(" + roty + "deg)";
+
+				lastx = nowx;
+				lasty = nowy;
+				return this
+			}
+
+			this.onmouseup = function(e)
+			{
+				/*清除事件*/
+				this.onmousemove=null
+
+				/*惯性*/
+				timer = setInterval(function() 
 				{
-					clearInterval(timer)
-				}
-			}, 1000 / 60)
+					minusx *= 0.98;
+					minusy *= 0.98;
+					rotx -= minusy * 0.1
+					roty += minusx * 0.1
+
+					if (rotx < -30) 
+					{
+						rotx = -30
+					}
+					if (rotx > 30) 
+					{
+						rotx = 30
+					}
+					
+					owrap.style.transform = "rotateX(" + rotx + "deg) rotateY(" + roty + "deg)";
+					if (Math.abs(minusx) < 0.1 || Math.abs(minusy) < 0.1) 
+					{
+						clearInterval(timer)
+					}
+				}, 1000 / 60)
+			}
 		}
 	}
-}
 
 
-/*****************字符分割工具*****************/
-this.tool = function(x)
-{
-	var h = x.toLowerCase().split(" ");
-	var tol = [];
 
-	for (var i = 0; i < h.length; i++)
+
+
+
+	/*****************在开始元素之前插入*****************/
+	/*
+	newnode:表示要插入的对象
+	只能是包裹着html标签的文本否则
+	多次添加导致冲掉先前添加的内容。
+	使用$(xx).befroeStart(newnode)
+	没有返回 
+	*/
+	this.beforeStart=function(newnode)
+	{   
+		setTimeout(1000)
+		var insertnode
+		var len=this.element.length
+		for(var i=0;i<len;i++)
+		{   
+			insertnode=this.element[i]
+			if(this.element[i]=="undefined")
+			{
+				alert("beforeStart中传入了一个空值而中断")
+				return	
+			}
+			insertnode=this.element[i]
+			this.insertBefore(newnode,insertnode);
+
+		}
+		
+	}
+
+
+
+
+
+
+
+	/*****************在元素开始节点后面添加*****************/
+	/*
+	newel:表示要添加的内容
+	只能是包裹着html标签的文本否则
+	多次添加导致冲掉先前添加的内容。
+	没有返回值
+	使用方法：$(xxxx).afterStart(newel)
+	*/
+	this.afterStart=function (newel)
+	{   
+		
+		var el
+		var len=this.element.length
+		var child
+		var content
+
+		for(var i=0;i<len;i++)
+		{   
+			el=this.element[i]
+			if(el=="undefined")
+			{
+				alert("afterStart中传入空值而中断")
+				return
+			}
+			child=el.children
+			content=el.innerText
+			if(typeof(child[0])!="undefined")
+			{  
+				this.insertBefore(newel,child[0])
+			}
+			else 
+			{   
+				el.innerText=""
+				el.append(newel)
+				el.append(content)
+			}
+		}
+		
+
+	}
+
+
+
+
+	/*****************在结束元素之前添加*****************/
+	/*
+	newel:要添加的内容
+	只能是包裹着html标签的文本否则
+	多次添加导致冲掉先前添加的内容。
+	没有返回值
+	使用方法：$(XXX).beforeEnd(newel) 
+	*/
+	this.beforeEnd=function(newel)
+	{   setTimeout(1000)
+		var el
+		var len=this.element.length
+		for(var i=0;i<len;i++ )
+		{   
+			el=this.element[i]
+			if(el=="undefined")
+			{
+				alert("beforeEnd中传入空值而中断")
+				return
+			}
+			el.innerHTML=el.innerHTML+newel
+		}
+		
+		
+	}
+
+
+
+
+
+
+
+	/*****************在结束元素之后插入*****************/
+	/*
+	insertnode:表示要插入点元素
+	newnode：表示插入的内容
+	只能是包裹着html标签的文本否则
+	多次添加导致冲掉先前添加的内容。
+	使用方法$(XX).afterEnd(newnode)
+	没有返回值 
+	*/
+	this.afterEnd=function(newnode)
+	{   
+		var len=this.element.length
+		var insertnode
+		var nextbrother
+		for(var i=0;i<len;i++)
+		{   
+			insertnode=this.element[i]
+			if(insertnode=="undefined")
+			{
+				alert("afterEnd传入一个空值而中断")
+				return 
+			}
+			
+			if(insertnode.nodeType!=1)
+			{
+				alert("传入的对象集中有不是元素节点的afterEnd")
+				return ;
+			}
+
+			/*
+			知己写的用于查找兄弟的nextbrotherling有bug
+			会把换行符也算进去 
+			*/
+			nextbrother=brother(insertnode,"next")
+
+			if(nextbrother==null)
+			{   
+				insertnode.parentNode.append(newnode)
+			}
+			else if(nextbrother!=null)
+			{   
+				this.insertBefore(newnode,nextbrother)
+			}
+		}
+        
+	}
+
+
+
+
+
+
+	/*****************空格分割工具*****************/
+	/*
+	x:表示字符串 
+	注意大写会变成小写
+	返回list
+	*/
+	this.tool = function(x)
 	{
-		if (h[i] != "") 
+		var h = x.toLowerCase().split(" ");
+		var tol = [];
+
+		for (var i = 0; i < h.length; i++)
 		{
-			tol.push(h[i])
+			if (h[i] != "") 
+			{
+				tol.push(h[i])
+			}
 		}
+		return tol
 	}
-	return tol
-}
 
 
 
 
-/******************获取函数名称***************/
+
+
+
+	/******************获取函数名称***************/
+
 	/*使用了正则表达式,
-	  "/要匹配的样式/ig" i表示忽略大小写，g是global
-	  表示全局
-	  */
-	  this.getFunc = function(str) 
-	  {
+	"/要匹配的样式/ig" i表示忽略大小写，g是global
+	表示全局
+	*/
+	this.getFunc = function(str) 
+	{
+
 		var e = /^function\s+[A-z]+/ig //得到 function  x（）
 		var t = /\s[A-z]+/ig //得到空格+x()
 		var y = /[A-z]+/ig //去除空格
@@ -476,8 +679,11 @@ this.tool = function(x)
 		ko = y.exec(ko)
 		ko = ko.toString()
 		return ko
-
 	}
+
+
+
+
 
 
 	/********************插件扩展******************/
@@ -499,22 +705,180 @@ this.tool = function(x)
 		return this
 	}
 
+
+
+
+
+
+
+	/*****************查找同级别的元素*****************/
+	/*
+	el：表示要查找的元素
+	flag：有“next”表示查找下一个同级别的元素
+	有“pre” 表示查找上一个级别的同级元素  
+	*/
+	this.brother=function (el,flag)
+	{
+		var parent=el.parentNode
+		var children=parent.children
+		var len=children.length
+		var  stack=[]
+		for(var i=0;i<len;i++)
+		{  
+			stack.push(children[i])
+		}
+
+		var index=stack.indexOf(el)
+
+		if(flag=="next")
+		{
+			index+=1
+		}
+		if(flag=="pre")
+		{
+			index-=1
+
+		}
+		if(stack[index]==null)
+		{
+			return null
+		}
+		return stack[index]
+	}
+
+
+
+
+
+
+
+
+	/*****************重写的原生的insertBefore*****************/
+	/*
+	content：要添加的内容
+	注意:
+	只要求输入一个值，
+	如果单独使用
+	可以输入两个值。
+	第一个参数是要添加的内容
+	第二个是元素对象
+
+	没有返回值
+	使用1方法：$(XXX).insertBefore(content)
+	使用2方法：$().insertBefore(content,元素)
+    content不能是纯文本(带有html标签)，否则多
+    次添加有可能冲掉前面的添加内容
+	*/
+	this.insertBefore=function(content)
+	{   
+		var temp=""
+		var parent=""
+		var parentchildren=""
+		var tempchildren=[]
+		var index=""
+		var len=""
+		var ellen=""
+		var contact=""
+
+		if(arguments[1]=="undefined")
+		{   
+			temp=this.element
+			ellen=temp.length
+			for(var i=0;i<ellen;i++)
+			{
+				if(temp[i]=="undefined")
+				{
+					alert("insertBefore中传入一个空值而中断")
+					return 
+				}
+
+				parent=temp[i].parentNode
+				parentchildren=parent.children
+				len=parentchildren.length 
+
+
+				for(var n=0;n<len;n++)
+				{
+					tempchildren.push(parentchildren[n])
+				}
+
+				index=tempchildren.indexOf(temp[i])
+
+				for(var i=0;i<len;i++)
+				{   
+					if(i==index)
+					{
+						contact+=content
+					}
+
+					var attr=parentchildren[i].attributes
+					var alen=attr.length
+					var acon=" "
+					for(var i=0;i<alen;i++)
+					{
+						acon+=attr[i].name+"="+attr[i].value+" "
+					}
+					contact+="<"+parentchildren[i].tagName.toLowerCase()+
+					acon+
+					">"+parentchildren[i].innerHTML+
+					"</"+parentchildren[i].tagName.toLowerCase()+">"
+				}
+			}
+		}
+		if(arguments[1]!="undefined"){
+			temp=arguments[1]
+
+			if(temp=="undefined")
+			{
+				alert("insertBefore中传入一个空值而中断")
+				return 
+			}
+
+			parent=temp.parentNode
+			parentchildren=parent.children
+			len=parentchildren.length 
+
+
+
+			for(var n=0;n<len;n++)
+			{
+				tempchildren.push(parentchildren[n])
+			}
+
+			index=tempchildren.indexOf(temp)
+
+			for(var k=0;k<len;k++)
+			{   
+				if(k==index)
+				{
+					contact+=content
+				}
+				var attr=parentchildren[k].attributes
+				var alen=attr.length
+				var acon=" "
+				for(var i=0;i<alen;i++)
+				{   
+					acon+=attr[i].name+"="+attr[i].value+" "
+				}
+
+
+				contact+="<"+parentchildren[k].tagName.toLowerCase()+
+				acon+
+				">"+parentchildren[k].innerHTML+
+				"</"+parentchildren[k].tagName.toLowerCase()+">"
+			}
+
+
+		}
+		if(parent!="undefined")
+		{
+			parent.innerHTML=contact
+		}
+	}
 }
 
+	
 
-
-/**************************测试*******************************/
-// function ji()
-// {
-//   run("此显示是在插件ji中")
-// }
-
-// //插件扩展
-// $().extend(ji)
-// $().ji()
-
-
-// $(".div1").css("color:red,background:yellow")
 
 
 
