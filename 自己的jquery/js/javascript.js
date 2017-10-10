@@ -11,7 +11,6 @@
 
 	var $ = function(x) 
 	{  var _init = new chajian()
-		
 		//使用多级选择器获取对象的并且会放在this.element中
 		if (x != null ) 
 		{
@@ -39,7 +38,13 @@ function chajian()
 	//随便弄几个变量以便放值
 	this.element = []
 	this.temp = 1
-
+	/*
+	由于插入操作中innerHTML渲染要
+	从新定位元素后才能继续渲染否则
+	只渲染最后一次，所以要从新加载
+	选择器,_x是暂时保存查找的内容 
+	*/
+	var _x
 
 
 
@@ -186,7 +191,7 @@ function chajian()
 	/*****************多级选择*****************/
 	this.child = 0 //数据由query修改传给findchild，用于计数有多少个参数传入
 	this.query = function(x) 
-	{
+	{   _x=x    //在操作插入一次中要求更新，所以后面要调用这个函数参数一样
 		var q = this.tool(x)
 		var tem = 0
 
@@ -478,25 +483,26 @@ function chajian()
 	只能是包裹着html标签的文本否则
 	多次添加导致冲掉先前添加的内容。
 	使用$(xx).befroeStart(newnode)
-	没有返回 
+	返回 this便于连缀
 	*/
 	this.beforeStart=function(newnode)
 	{   
-		setTimeout(1000)
 		var insertnode
 		var len=this.element.length
 		for(var i=0;i<len;i++)
 		{   
 			insertnode=this.element[i]
-			if(this.element[i]=="undefined")
+			if(this.element[i]=="undefined"||this.element[i]==null)
 			{
 				alert("beforeStart中传入了一个空值而中断")
 				return	
 			}
+
 			insertnode=this.element[i]
 			this.insertBefore(newnode,insertnode);
 
 		}
+		return this
 		
 	}
 
@@ -511,12 +517,11 @@ function chajian()
 	newel:表示要添加的内容
 	只能是包裹着html标签的文本否则
 	多次添加导致冲掉先前添加的内容。
-	没有返回值
+	返回this便于连缀
 	使用方法：$(xxxx).afterStart(newel)
 	*/
-	this.afterStart=function (newel)
+	this.afterStart=function(newel)
 	{   
-		
 		var el
 		var len=this.element.length
 		var child
@@ -531,20 +536,19 @@ function chajian()
 				return
 			}
 			child=el.children
-			content=el.innerText
+			content=el.innerHTML
 			if(typeof(child[0])!="undefined")
-			{  
+			{   
 				this.insertBefore(newel,child[0])
 			}
 			else 
 			{   
-				el.innerText=""
+				el.innerHTML=""
 				el.append(newel)
 				el.append(content)
 			}
 		}
-		
-
+		return this
 	}
 
 
@@ -555,11 +559,11 @@ function chajian()
 	newel:要添加的内容
 	只能是包裹着html标签的文本否则
 	多次添加导致冲掉先前添加的内容。
-	没有返回值
+	返回this便于连缀
 	使用方法：$(XXX).beforeEnd(newel) 
 	*/
 	this.beforeEnd=function(newel)
-	{   setTimeout(1000)
+	{   
 		var el
 		var len=this.element.length
 		for(var i=0;i<len;i++ )
@@ -572,8 +576,7 @@ function chajian()
 			}
 			el.innerHTML=el.innerHTML+newel
 		}
-		
-		
+		return this
 	}
 
 
@@ -589,7 +592,7 @@ function chajian()
 	只能是包裹着html标签的文本否则
 	多次添加导致冲掉先前添加的内容。
 	使用方法$(XX).afterEnd(newnode)
-	没有返回值 
+	返回值this便于连缀
 	*/
 	this.afterEnd=function(newnode)
 	{   
@@ -626,7 +629,7 @@ function chajian()
 				this.insertBefore(newnode,nextbrother)
 			}
 		}
-        
+		return this
 	}
 
 
@@ -768,116 +771,125 @@ function chajian()
 	使用2方法：$().insertBefore(content,元素)
     content不能是纯文本(带有html标签)，否则多
     次添加有可能冲掉前面的添加内容
-	*/
-	this.insertBefore=function(content)
-	{   
-		var temp=""
-		var parent=""
-		var parentchildren=""
-		var tempchildren=[]
-		var index=""
-		var len=""
-		var ellen=""
-		var contact=""
+    */
+    this.insertBefore=function(content)
+    {   
+    	var temp=""
+    	var parent=""
+    	var parentchildren=""
+    	var tempchildren=[]
+    	var index=""
+    	var len=""
+    	var ellen=""
+    	var contact=""
 
-		if(arguments[1]=="undefined")
-		{   
-			temp=this.element
-			ellen=temp.length
-			for(var i=0;i<ellen;i++)
-			{
-				if(temp[i]=="undefined")
-				{
-					alert("insertBefore中传入一个空值而中断")
-					return 
-				}
+    	if(arguments[1]=="undefined")
+    	{   
+    		temp=this.element
+    		ellen=temp.length
+    		for(var i=0;i<ellen;i++)
+    		{
+    			if(temp[i]=="undefined")
+    			{
+    				alert("insertBefore中传入一个空值而中断")
+    				return 
+    			}
 
-				parent=temp[i].parentNode
-				parentchildren=parent.children
-				len=parentchildren.length 
-
-
-				for(var n=0;n<len;n++)
-				{
-					tempchildren.push(parentchildren[n])
-				}
-
-				index=tempchildren.indexOf(temp[i])
-
-				for(var i=0;i<len;i++)
-				{   
-					if(i==index)
-					{
-						contact+=content
-					}
-
-					var attr=parentchildren[i].attributes
-					var alen=attr.length
-					var acon=" "
-					for(var i=0;i<alen;i++)
-					{
-						acon+=attr[i].name+"="+attr[i].value+" "
-					}
-					contact+="<"+parentchildren[i].tagName.toLowerCase()+
-					acon+
-					">"+parentchildren[i].innerHTML+
-					"</"+parentchildren[i].tagName.toLowerCase()+">"
-				}
-			}
-		}
-		if(arguments[1]!="undefined"){
-			temp=arguments[1]
-
-			if(temp=="undefined")
-			{
-				alert("insertBefore中传入一个空值而中断")
-				return 
-			}
-
-			parent=temp.parentNode
-			parentchildren=parent.children
-			len=parentchildren.length 
+    			parent=temp[i].parentNode
+    			parentchildren=parent.children
+    			len=parentchildren.length 
 
 
+    			for(var n=0;n<len;n++)
+    			{
+    				tempchildren.push(parentchildren[n])
+    			}
 
-			for(var n=0;n<len;n++)
-			{
-				tempchildren.push(parentchildren[n])
-			}
+    			index=tempchildren.indexOf(temp[i])
 
-			index=tempchildren.indexOf(temp)
+    			for(var i=0;i<len;i++)
+    			{   
+    				if(i==index)
+    				{
+    					contact+=content
+    				}
 
-			for(var k=0;k<len;k++)
-			{   
-				if(k==index)
-				{
-					contact+=content
-				}
-				var attr=parentchildren[k].attributes
-				var alen=attr.length
-				var acon=" "
-				for(var i=0;i<alen;i++)
-				{   
-					acon+=attr[i].name+"="+attr[i].value+" "
-				}
+    				var attr=parentchildren[i].attributes
+    				var alen=attr.length
+    				var acon=" "
+    				for(var i=0;i<alen;i++)
+    				{
+    					acon+=attr[i].name+"="+attr[i].value+" "
+    				}
+    				contact+="<"+parentchildren[i].tagName.toLowerCase()+
+    				acon+
+    				">"+parentchildren[i].innerHTML+
+    				"</"+parentchildren[i].tagName.toLowerCase()+">"
+    			}
+    		}
+    	}
+    	if(arguments[1]!="undefined"){
+    		temp=arguments[1]
+
+    		if(temp=="undefined")
+    		{
+    			alert("insertBefore中传入一个空值而中断")
+    			return 
+    		}
 
 
-				contact+="<"+parentchildren[k].tagName.toLowerCase()+
-				acon+
-				">"+parentchildren[k].innerHTML+
-				"</"+parentchildren[k].tagName.toLowerCase()+">"
-			}
+    		parent=temp.parentNode
+    		parentchildren=parent.children
+    		len=parentchildren.length 
 
 
-		}
-		if(parent!="undefined")
-		{
-			parent.innerHTML=contact
+
+    		for(var n=0;n<len;n++)
+    		{
+    			tempchildren.push(parentchildren[n])
+    		}
+
+    		index=tempchildren.indexOf(temp)
+
+    		for(var k=0;k<len;k++)
+    		{   
+    			if(k==index)
+    			{
+    				contact+=content
+    			}
+    			var attr=parentchildren[k].attributes
+    			var alen=attr.length
+    			var acon=" "
+    			for(var i=0;i<alen;i++)
+    			{   
+    				acon+=attr[i].name+"="+attr[i].value+" "
+    			}
+
+
+    			contact+="<"+parentchildren[k].tagName.toLowerCase()+
+    			acon+
+    			">"+parentchildren[k].innerHTML+
+    			"</"+parentchildren[k].tagName.toLowerCase()+">"
+    		}
+    	}
+    	if(parent!="undefined")
+    	{
+    		parent.innerHTML=contact
+			/*
+			innerHMTL是要等所有程序完成后
+			一次性渲染，所以两个innerHTML
+			中间有其他程序时不会先渲染第一个
+			而是到最后一个innerHTML时才渲染；
+			但是再次定位元素就会使其先渲染
+			后面的再次渲染
+			*/
+			this.query(_x) 
 		}
 	}
+
 }
 
-	
+
 
 
 
