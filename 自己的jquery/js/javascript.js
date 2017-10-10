@@ -668,7 +668,11 @@ function chajian()
 
 	/*使用了正则表达式,
 	"/要匹配的样式/ig" i表示忽略大小写，g是global
-	表示全局
+	表示全局.
+
+	匿名函数（使用变量来代表这个函数。本身没有函数名）
+	变量代表的是赋的值，不代表本身
+	要获取本身叫啥使用.name获取
 	*/
 	this.getFunc = function(str) 
 	{
@@ -681,23 +685,34 @@ function chajian()
 
 		ko = y.exec(ko)
 		ko = ko.toString()
-		return ko
-	}
+        //ko本来为null但是使用了tostring变成了"null"
+        if(ko=="null")
+        	ko=str.name
+
+        return ko
+    }
 
 
 
 
 
 
-	/********************插件扩展******************/
+    /********************插件扩展******************/
 	/*
 	使用方法是：$().extend(XXX)
 	XXX是函数的名称，不要括号。 
+	xxx一般不能是匿名函数（var ji=fucntion(){AA}
+   ji是变量代表这个匿名的函数不是函数名称，
+   变量不是其字面名称是所代表的值）
+   但是在上面getFunc（X）函数中进行了调优
+   ，使用x.name把变量的名称获取出来--匿名函数名
+   为null我使用变量名来命名插件的方法
+   。
+	
 	*/
 	this.extend = function(x) 
-	{
+	{   
 		var name = this.getFunc(x) //获取函数的名称
-
 		/*prototype 不能使用this 只能使用类的 
 		名称使用[]号替代点号可以动态设置名称.
 		由于$函数中每次是new一个对象，所以使用
@@ -888,7 +903,6 @@ function chajian()
 	}
 
 }
-
 
 
 
