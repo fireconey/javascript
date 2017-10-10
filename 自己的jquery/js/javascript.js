@@ -618,7 +618,7 @@ function chajian()
 			知己写的用于查找兄弟的nextbrotherling有bug
 			会把换行符也算进去 
 			*/
-			nextbrother=brother(insertnode,"next")
+			nextbrother=this.brother(insertnode,"next")
 
 			if(nextbrother==null)
 			{   
