@@ -10,7 +10,8 @@
 	*/
 
 	var $= function(x) 
-	{  var _init = new chajian()
+	{  
+		var _init = new chajian()
 		//使用多级选择器获取对象的并且会放在this.element中
 		if (x != null ) 
 		{
@@ -236,48 +237,48 @@ function chajian()
 
 	/*****************导入js文件*****************/
 	/*
-	  append是在选定元素的子元素后面追加
-	  innerHTML导入的js代码不能执行要使用
-      createElement
-      使用：$().include("XXX.js")
-      */
-      this.include = function(x) 
-      {
-      	var body = document.getElementsByTagName("html")[0];
-      	var content = document.createElement("srcipt");
+	append是在选定元素的子元素后面追加
+	innerHTML导入的js代码不能执行要使用
+    createElement
+    使用：$().include("XXX.js")
+    */
+    this.include = function(x) 
+    {
+    	var body = document.getElementsByTagName("html")[0];
+    	var content = document.createElement("srcipt");
 
-      	content.setAttribute("src", x)
-      	body.append(content)
-      }
-
-
+    	content.setAttribute("src", x)
+    	body.append(content)
+    }
 
 
 
-      /*****************颜色设置函数*****************/
+
+
+    /*****************颜色设置函数*****************/
 	/*
 
-	 $("div").color("background:color, color:black")
-	 */
-	 this.css = function(y) 
-	 {     
-	 	var x=y.replace(" ","")
-	 	var y = y.split(",")
+	$("div").color("background:color, color:black")
+	*/
+	this.css = function(y) 
+	{     
+		var x=y.replace(" ","")
+		var y = y.split(",")
 
-	 	if (x == null) 
-	 	{
-	 		alert("css函数传入的不是标准值")
-	 		return;
-	 	}
-	 	
-	 	for (var i = 0; i < y.length; i++) 
-	 	{
-	 		if (y[i] != "") 
-	 		{
-	 			var u = y[i].split(":")
+		if (x == null) 
+		{
+			alert("css函数传入的不是标准值")
+			return;
+		}
 
-	 			for (var j = 0; j < this.element.length; j++) 
-	 			{
+		for (var i = 0; i < y.length; i++) 
+		{
+			if (y[i] != "") 
+			{
+				var u = y[i].split(":")
+
+				for (var j = 0; j < this.element.length; j++) 
+				{
 					this.element[j].style[u[0]] = u[1] //style的点号可以使用[]替代，这样就能动态设置了。
 				}
 			}
@@ -352,7 +353,7 @@ function chajian()
 
 
 
-
+	
 
 	/*****************3D效果*****************/
 	/*
@@ -363,14 +364,14 @@ function chajian()
 	z:图片到中心的距离
 	#_wrap img:设置图片颜色
 	#_wrap:设置包裹的div的样式
-	使用如：$().D3(2,"file/img","_div",100,100)
+	使用如：$(id).D3(2,"file/img",100,100)
 	*/
-	this.D3=function(j,src,id,shengdu,z)
+	this.D3=function(j,src,shengdu,z)
 	{
 		/*
 		先添加包装元素
 		*/	
-		var loc=document.getElementById(id)
+		var loc=this.element[0]
 
 		var insertwrap="<div id='_wrap'> </div>"
 		loc.innerHTML=insertwrap
@@ -404,6 +405,96 @@ function chajian()
 		wrap.innerHTML=insertimg
 
 
+
+		var tr=function()
+		{
+
+			var dg=owrap.style.transform.toString()
+			var r=/rotateX\([\d]+/ig
+			var dg=r.exec(dg)
+			var st
+			for(var i=0;i<len;i++)
+			{
+				oimg[i].style.webkitBoxReflect="below 5px -webkit-linear-gradient(top,rgba(0,0,0,0) 40%,rgba(0,0,0,0.5) 100%)" 
+			}
+			if(dg!=null)
+			{   
+				st=dg.toString().split("(")
+				st=parseInt(st[1])
+
+				if(st>0)
+				{  
+					
+					var idg=wrap.style.transform.toString()
+					var ir=/rotateY\(-*[\d]+/ig
+					var idg=ir.exec(idg)
+
+
+
+					if(idg!=null)
+					{	
+
+						var ist=idg.toString().split("(")
+						var ist=parseInt(ist[1])%360
+
+						var ty=0;
+						if(ist>j)
+						{
+							var ding=parseInt(ist/deg)//走了多少步
+							for(var uo=parseInt(j/4);uo>-parseInt(j/4);uo--)    //移位
+							{ 
+								if(uo-ding<0) //开头要在每个数上轮一次才叫遍历了
+								          	 //当最后的一个开始为-1时还要向后走，由于开头的还没到0的位置
+								{            //所以还要向前走。但是这是-1是表示最大数了，这时要+个数，就变成了最大的下标
+									ty=j
+								}
+
+                             	if(uo-ding<-j) //已经超出一个数量级了移位导致还超出一个数量级所以还要加一个数量级
+                             	{
+                             		ty=2*j
+                             	}
+								oimg[uo-ding+ty].style.webkitBoxReflect=null  //9-dind退了多少步
+
+							}
+						}
+						if(ist<0)
+						{  
+							var ding=parseInt(ist/deg)//走了多少步
+
+							for(var uo=parseInt(j/4);uo>-parseInt(j/4);uo--)    //移位
+							{   
+								if(uo-ding<0) //开头要在每个数上轮一次才叫遍历了
+								          			//当最后的一个开始为-1时还要向后走，由于开头的还没到0的位置
+								{              //所以还要向前走。但是这是-1是表示最大数了，这时要+个数，就变成了最大的下标
+									ty=j
+								}
+
+                             	if(uo-ding>j-1) //已经超出一个数量级了移位导致还超出一个数量级所以还要加一个数量级
+                             	{
+                             		ty=-j
+                             		oimg[uo-ding+ty].style.webkitBoxReflect=null
+                             		ty=0      //for中第一个为uo-ding为j,ty=-j，但是第二个不为j，但ty还是为-j导致
+                             	}             //else中的oimg错误。所以要恢复
+                             	else
+                             	{
+									oimg[uo-ding+ty].style.webkitBoxReflect=null  //9-dind退了多少步
+								}
+							}
+						}
+
+					}
+
+				}
+
+			}
+		}
+
+
+
+
+
+
+
 		/************* 
 		以下是3D核心代码*
 		****************/
@@ -413,14 +504,23 @@ function chajian()
 		var len = oimg.length;
 		var timer;
 
+		owrap.style.position="relative"
+		owrap.style.width="160px";
+		owrap.style.height="240px"; 
+		owrap.style.border="1px solid #000";
+		owrap.style.margin="350px auto";
 		for (var i=0; i < len; i++)
 		{   
 			oimg[i].style.position="absolute"
 			oimg[i].style.webkitBoxReflect="below 5px -webkit-linear-gradient(top,rgba(0,0,0,0) 40%,rgba(0,0,0,0.5) 100%)" 
-			oimg[i].style.transform = "rotateY(" + i * deg + "deg)  translateZ("+z+"px)";
+			oimg[i].style.transform = "rotateY(" + i * deg + "deg)  translateZ("+z+"px) ";
 			oimg[i].style.zindex = -i*2;
 			oimg[i].style.WebkitTransition = "all 2s";
 			oimg[i].style.transition = "all "+(i+1)+"s";
+			oimg[i].style.width="160px"
+			oimg[i].style.height="240px"
+			oimg[i].style.top="0px"
+			oimg[i].style.border="1px solid black "
 
 		}
 
@@ -435,12 +535,10 @@ function chajian()
 		document.onmousedown = function(e)
 		{
 			e.preventDefault();
-
 			var e = e || window.event;
 			lastx = e.clientX, lasty = e.clientY,
-
 			this.onmousemove = function(e) {
-
+				tr()
 				var e = e || window.event;
 				nowx = e.clientX;
 				nowy = e.clientY;
@@ -490,6 +588,7 @@ function chajian()
 					}
 					
 					owrap.style.transform = "rotateX(" + rotx + "deg) rotateY(" + roty + "deg)";
+					tr()
 					if (Math.abs(minusx) < 0.1 || Math.abs(minusy) < 0.1) 
 					{
 						clearInterval(timer)
@@ -707,7 +806,7 @@ function chajian()
 		var e = /^function\s+[A-z]+/ig //得到 function  x（）
 		var t = /\s[A-z]+/ig //得到空格+x()
 		var y = /[A-z]+/ig //去除空格
-		var op = e.exec(ji)
+		var op = e.exec(str)
 		var ko = t.exec(op)
 
 		ko = y.exec(ko)
