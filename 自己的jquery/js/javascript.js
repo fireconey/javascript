@@ -9,7 +9,7 @@
 	起到连缀的效果（如：a.b.c）。
 	*/
 
-	var $ = function(x) 
+	var $= function(x) 
 	{  var _init = new chajian()
 		//使用多级选择器获取对象的并且会放在this.element中
 		if (x != null ) 
@@ -299,28 +299,55 @@ function chajian()
 	{
 		var ar=arguments;
 		var len=ar.length;
-
+		var _temp
 		if(this.element.length==0)
 		{
 			alert("你还没有选定元素");
 			return;
 		}
+
 		if(len!=0)
 		{  
-			if(this.element.length!=arguments[0]+1)
+			if(arguments[0]=="all")
+			{  
+				if(arguments[1]!=null)
+				{
+					alert("getEl('all'"+",'"+arguments[1]+"')\n不能有后面的参数:"+arguments[1])
+				}
+				else
+				{
+					console.log("getEl('all')\n返回的结果只能使用原生方法")
+				}
+				return this.element
+			}
+			if(this.element[arguments[0]]==null)
 			{
-				alert("元素集中没有第："+arguments[0]+"\n个元素")
+				alert("元素集中没有下表为："+arguments[0]+"\n的元素")
+				this.element=[]
 				return  this;
 			}
-			else
+			if(arguments[1]=="$")
 			{
+				_temp=this.element[arguments[0]]
+				this.element=[]
+				this.element.push(_temp)
+				return this
+			}
+			else
+			{   
+
+				if(arguments[1]!=null)
+				{
+					alert("getEl("+arguments[0]+",'"+arguments[1]+"')\n不能有后面的参数:"+arguments[1])
+				}
+				else
+				{
+					console.log("getEl("+arguments[0]+")\n返回的结果只能使用原生方法")
+				}
 				return this.element[arguments[0]]
 			}
 		}
-		else
-		{
-			return this.element
-		}
+
 	}
 
 
@@ -709,9 +736,9 @@ function chajian()
    为null我使用变量名来命名插件的方法
    。
 	
-	*/
-	this.extend = function(x) 
-	{   
+   */
+   this.extend = function(x) 
+   {   
 		var name = this.getFunc(x) //获取函数的名称
 		/*prototype 不能使用this 只能使用类的 
 		名称使用[]号替代点号可以动态设置名称.
