@@ -372,7 +372,11 @@ function chajian()
 		先添加包装元素
 		*/	
 		var loc=this.element[0]
-
+		if(loc==null)
+		{
+			alert("还没有选定嵌入的位置")
+			return
+		}
 		var insertwrap="<div id='_wrap'> </div>"
 		loc.innerHTML=insertwrap
 
@@ -405,41 +409,43 @@ function chajian()
 		wrap.innerHTML=insertimg
 
 
+       	/*
+       	设置仰视图和俯视图时
+       	的取阴影效果 
+       	*/
+       	var tr=function()
+       	{
 
-		var tr=function()
-		{
+       		var dg=owrap.style.transform.toString()
+       		var r=/rotateX\([\d]+/ig
+       		var dg=r.exec(dg)
+       		var st
+       		for(var i=0;i<len;i++)
+       		{
+       			oimg[i].style.webkitBoxReflect="below 5px -webkit-linear-gradient(top,rgba(0,0,0,0) 40%,rgba(0,0,0,0.5) 100%)" 
+       		}
+       		if(dg!=null)
+       		{   
+       			st=dg.toString().split("(")
+       			st=parseInt(st[1])
 
-			var dg=owrap.style.transform.toString()
-			var r=/rotateX\([\d]+/ig
-			var dg=r.exec(dg)
-			var st
-			for(var i=0;i<len;i++)
-			{
-				oimg[i].style.webkitBoxReflect="below 5px -webkit-linear-gradient(top,rgba(0,0,0,0) 40%,rgba(0,0,0,0.5) 100%)" 
-			}
-			if(dg!=null)
-			{   
-				st=dg.toString().split("(")
-				st=parseInt(st[1])
-
-				if(st>0)
-				{  
-					
-					var idg=wrap.style.transform.toString()
-					var ir=/rotateY\(-*[\d]+/ig
-					var idg=ir.exec(idg)
+       			if(st>1)
+       			{  
+       				
+       				var idg=wrap.style.transform.toString()
+       				var ir=/rotateY\(-*[\d]+/ig
+       				var idg=ir.exec(idg)
 
 
+       				if(idg!=null)
+       				{	
 
-					if(idg!=null)
-					{	
+       					var ist=idg.toString().split("(")
+       					var ist=parseInt(ist[1])%360
 
-						var ist=idg.toString().split("(")
-						var ist=parseInt(ist[1])%360
-
-						var ty=0;
-						if(ist>j)
-						{
+       					var ty=0;
+       					if(ist>j)
+       					{
 							var ding=parseInt(ist/deg)//走了多少步
 							for(var uo=parseInt(j/4);uo>-parseInt(j/4);uo--)    //移位
 							{ 
@@ -505,10 +511,8 @@ function chajian()
 		var timer;
 
 		owrap.style.position="relative"
-		owrap.style.width="160px";
-		owrap.style.height="240px"; 
-		owrap.style.border="1px solid #000";
-		owrap.style.margin="350px auto";
+		
+		
 		for (var i=0; i < len; i++)
 		{   
 			oimg[i].style.position="absolute"
@@ -517,10 +521,8 @@ function chajian()
 			oimg[i].style.zindex = -i*2;
 			oimg[i].style.WebkitTransition = "all 2s";
 			oimg[i].style.transition = "all "+(i+1)+"s";
-			oimg[i].style.width="160px"
-			oimg[i].style.height="240px"
 			oimg[i].style.top="0px"
-			oimg[i].style.border="1px solid black "
+			
 
 		}
 
